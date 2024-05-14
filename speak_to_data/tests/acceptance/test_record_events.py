@@ -215,7 +215,8 @@ class Test_REF3_PersistEventRecords(unittest.TestCase):
     """
 
     def setUp(self):
-        self.test_path = Path("~/.local/share/speak-to-data/test_events.csv").expanduser()
+        secs_since_epoch = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        self.test_path = Path(f"./{secs_since_epoch}_test_events.csv")
         with open(self.test_path, "w") as tp:
             tp.write(
                 '"date","action","crop","quantity","duration","location","location_type"\n'

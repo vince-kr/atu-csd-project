@@ -12,8 +12,8 @@ nlp = spacy.load("en_core_web_sm")
 
 class TestEventRecorder(unittest.TestCase):
     def setUp(self):
-        self.test_path = Path(
-            "~/.local/share/speak-to-data/test_events.csv").expanduser()
+        secs_since_epoch = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        self.test_path = Path(f"./{secs_since_epoch}_test_events.csv")
         self.test_path.touch()
 
     def tearDown(self):

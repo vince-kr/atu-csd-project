@@ -34,7 +34,7 @@ jobs:
           python -m poetry run python -m spacy download en_core_web_sm
       - name: Start Flask dev server
         run: |
-          python -m poetry run flask --app speak_to_data/presentation/app.py run
+          python -m poetry run flask --app speak_to_data/presentation/app.py run &
 
       - name: ZAP Scan
         uses: zaproxy/action-baseline@v0.12.0

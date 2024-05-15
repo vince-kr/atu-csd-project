@@ -3,6 +3,7 @@ import unittest
 
 from speak_to_data import application
 
+
 class TestGenerateAppData(unittest.TestCase):
     def setUp(self):
         mock_path = Path(__file__).parent.parent / "test_data" / "mock_app_data.json"
@@ -13,11 +14,10 @@ class TestGenerateAppData(unittest.TestCase):
             ("cress", "Cress"),
             ("potato", "Potato"),
             ("french-bean", "French bean"),
-            ("carrot", "Carrot")
+            ("carrot", "Carrot"),
         )
         actual = self.app_data_loader.load_crops()
         self.assertEqual(expected, actual)
-
 
     def test_givenMockLocData_thenApplicationGeneratesTuples(self):
         expected = (
@@ -27,7 +27,6 @@ class TestGenerateAppData(unittest.TestCase):
         )
         actual = self.app_data_loader.load_locations()
         self.assertEqual(expected, actual)
-
 
     def test_givenMockLocTypeData_thenApplicationGeneratesTuples(self):
         expected = (

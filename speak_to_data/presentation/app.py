@@ -15,8 +15,8 @@ def index():
         valid_query_data = application.parse_query(form.user_query.data)
         if valid_query_data:
             request_object = application.generate_request_object(
-                valid_query_data,
-                application.config.EVENT_RECORDS_PATH)
+                valid_query_data, application.config.EVENT_RECORDS_PATH
+            )
             response = application.call_tapas_on_hf(request_object)
         else:
             # Let the user know to change their query
@@ -27,19 +27,18 @@ def index():
         "previous_query": form.user_query.data,
         "response": response,
     }
-    return render_template(
-        "index.html",
-        form=form,
-        show_user=show_user
-    )
+    return render_template("index.html", form=form, show_user=show_user)
+
 
 @app.route("/sow", methods=["GET", "POST"])
 def record_sow():
     return _sow_or_plant()
 
+
 @app.route("/plant", methods=["GET", "POST"])
 def record_plant():
     return _sow_or_plant()
+
 
 def _sow_or_plant():
     form = presentation.SowForm()
@@ -52,10 +51,12 @@ def _sow_or_plant():
             return redirect("/")
     return render_template("sow.html", form=form)
 
+
 @app.route("/maintain", methods=["GET", "POST"])
 def record_maintain():
     form = presentation.MaintainForm()
     return render_template("maintain.html", form=form)
+
 
 @app.route("/harvest", methods=["GET", "POST"])
 def record_harvest():

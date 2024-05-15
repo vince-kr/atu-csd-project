@@ -15,6 +15,7 @@ class SowForm(action_form.ActionForm):
     location = shared_fields.location
     location_type = shared_fields.location_type
 
+
 class MaintainForm(action_form.ActionForm):
     date = shared_fields.date
     duration = RadioField(
@@ -22,9 +23,10 @@ class MaintainForm(action_form.ActionForm):
         validators=[
             AnyOf(
                 values=("1", "3", "6"),
-                message=f"Not a valid choice.\n{application.config.NOT_SAVED_WARNING}"
-            )],
-        choices = (
+                message=f"Not a valid choice.\n{application.config.NOT_SAVED_WARNING}",
+            )
+        ],
+        choices=(
             ("1", "Less than 30 minutes"),
             ("3", "Between 30 and 90 minutes"),
             ("6", "More than 90 minutes"),
@@ -32,6 +34,7 @@ class MaintainForm(action_form.ActionForm):
     )
     location = shared_fields.location
     location_type = shared_fields.location_type
+
 
 class HarvestForm(action_form.ActionForm):
     date = shared_fields.date

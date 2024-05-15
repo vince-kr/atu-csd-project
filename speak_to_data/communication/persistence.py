@@ -4,9 +4,9 @@ import json
 from pathlib import Path
 
 
-def persist_event(event_data: dict[str, str],
-                  persistence_path: Path,
-                  fieldnames: list[str]) -> None:
+def persist_event(
+    event_data: dict[str, str], persistence_path: Path, fieldnames: list[str]
+) -> None:
     if not persistence_path.is_file():
         raise FileNotFoundError(
             f"Trying to store the record at {persistence_path} "
@@ -19,11 +19,11 @@ def persist_event(event_data: dict[str, str],
     except PermissionError as pe:
         raise PermissionError(f"Not allowed to write to file {pe.filename}")
 
+
 def read_dataset(persistence_path: Path) -> list[dict]:
     if not persistence_path.is_file():
         raise FileNotFoundError(
-            f"Trying to read from {persistence_path} "
-            f"but this is not a valid path."
+            f"Trying to read from {persistence_path} but this is not a valid path."
         )
     full_dataset = []
     try:
@@ -36,6 +36,7 @@ def read_dataset(persistence_path: Path) -> list[dict]:
     except PermissionError as pe:
         raise PermissionError(f"Not allowed to read from file at:\n{pe.filename}")
     return full_dataset
+
 
 def read_json(path: Path) -> dict[str, str]:
     if not path.is_file():

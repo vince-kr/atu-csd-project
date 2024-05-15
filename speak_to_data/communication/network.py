@@ -1,12 +1,14 @@
 from collections import namedtuple
 import requests
 
+
 class TapasInterface:
     Url = namedtuple("Url", ("base_url", "owner", "model"))
-    tapas_large = Url("https://api-inference.huggingface.co/models",
-                      "google",
-                      "tapas-large-finetuned-wtq"
-                      )
+    tapas_large = Url(
+        "https://api-inference.huggingface.co/models",
+        "google",
+        "tapas-large-finetuned-wtq",
+    )
 
     def __init__(self, api_token: str):
         self.api_token = api_token

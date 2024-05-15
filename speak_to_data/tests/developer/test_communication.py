@@ -45,16 +45,14 @@ class TestPersistenceErrors(unittest.TestCase):
             communication.persist_event(
                 {"mock": "dict"},
                 invalid_path,
-                fieldnames=application.config.FIELD_NAMES
+                fieldnames=application.config.FIELD_NAMES,
             )
 
     def test_givenValidPathButNoAuthorisation_thenRaiseError(self):
         forbidden_path = Path("/usr/bin/cat")
         with self.assertRaises(PermissionError):
             communication.persist_event(
-                {"mock": "dict"},
-                forbidden_path,
-                application.config.FIELD_NAMES
+                {"mock": "dict"}, forbidden_path, application.config.FIELD_NAMES
             )
 
 

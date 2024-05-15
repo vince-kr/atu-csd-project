@@ -4,6 +4,7 @@ from speak_to_data.application import config, prepare_for_model, query_parser
 from speak_to_data.communication import read_dataset
 import unittest
 
+
 class TestCsvReaderToTableGenerator(unittest.TestCase):
     def setUp(self):
         self.query_data = query_parser.parse_query(
@@ -18,8 +19,7 @@ class TestCsvReaderToTableGenerator(unittest.TestCase):
             "quantity": ["1sqft", "2sqft"],
         }
         actual = prepare_for_model.generate_model_ready_dataset(
-            data_from_csv,
-            self.query_data
+            data_from_csv, self.query_data
         )
         self.assertEqual(expected, actual)
 
@@ -31,12 +31,13 @@ class TestCsvReaderToTableGenerator(unittest.TestCase):
                     "action": ["sow", "sow"],
                     "crop": ["cress", "cress"],
                     "quantity": ["1sqft", "2sqft"],
-                    },
+                },
             },
             "options": {
                 "wait_for_model": "true",
-            }
+            },
         }
-        actual = application.generate_request_object(self.query_data,
-                                                     application.config.MOCK_DATA_SMALL)
+        actual = application.generate_request_object(
+            self.query_data, application.config.MOCK_DATA_SMALL
+        )
         self.assertEqual(expected, actual)

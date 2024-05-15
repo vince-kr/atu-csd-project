@@ -25,15 +25,16 @@ class TestEventRecorder(unittest.TestCase):
             {
                 "crop": "cress",
                 "location": "kitchen",
-                "location_type": "indoors-window-box"
-                },
-            self.test_path
+                "location_type": "indoors-window-box",
+            },
+            self.test_path,
         )
         self.assertEqual(expected, actual)
 
 
 class TestQueryParserCropsAndActions(unittest.TestCase):
     """Extract crop and action data from a user query"""
+
     # Test retrieving crops from query
     # Logic for retrieving ACTIONS is identical
     def test_givenSetOfValidCrops_whenQueryContainsOneCrop_returnCrop(self):
@@ -56,6 +57,7 @@ class TestQueryParserCropsAndActions(unittest.TestCase):
 
 class TestQueryParserDateRange(unittest.TestCase):
     """Extract date objects from user query"""
+
     def setUp(self):
         self.today = datetime.date.today()
 
@@ -82,8 +84,7 @@ class TestQueryParserDateRange(unittest.TestCase):
         year = self.today.year
         month = self.today.month
         last_month = month - 1
-        last_day = (
-                datetime.date(year, month, 1) - datetime.timedelta(days=1)).day
+        last_day = (datetime.date(year, month, 1) - datetime.timedelta(days=1)).day
         expected = (
             datetime.date(year, last_month, 1),
             datetime.date(year, last_month, last_day),
@@ -120,8 +121,10 @@ class TestQueryParserDateRange(unittest.TestCase):
         no_dates = nlp("How many beds have potatoes or broadbeans?")
         query_date = query_parser.QueryDatesWarnings(no_dates)
         self.assertFalse(query_date)
-        expected = ("This query does not contain any dates. "
-                    "Please specify a date or date range.")
+        expected = (
+            "This query does not contain any dates. "
+            "Please specify a date or date range."
+        )
         actual = query_date.warning
         self.assertEqual(expected, actual)
 
@@ -129,8 +132,10 @@ class TestQueryParserDateRange(unittest.TestCase):
         future_date = nlp("How many eggs are gathered next Thursday?")
         query_date = query_parser.QueryDatesWarnings(future_date)
         self.assertFalse(query_date)
-        expected = ("Date reference \"next Thursday\" cannot be parsed as a date, "
-                    "or represents a future date.")
+        expected = (
+            'Date reference "next Thursday" cannot be parsed as a date, '
+            "or represents a future date."
+        )
         actual = query_date.warning
         self.assertEqual(expected, actual)
 
@@ -138,8 +143,10 @@ class TestQueryParserDateRange(unittest.TestCase):
         tricky_date = nlp("How many eggs were gathered on May Day?")
         query_date = query_parser.QueryDatesWarnings(tricky_date)
         self.assertFalse(query_date)
-        expected = ("Date reference \"May Day\" cannot be parsed as a date, "
-                    "or represents a future date.")
+        expected = (
+            'Date reference "May Day" cannot be parsed as a date, '
+            "or represents a future date."
+        )
         actual = query_date.warning
         self.assertEqual(expected, actual)
 
@@ -155,7 +162,8 @@ class TestCrux(unittest.TestCase):
 class TestDatasetFilter(unittest.TestCase):
     def setUp(self):
         self.query_data = query_parser.parse_query(
-            "How much cress did I sow last year?")
+            "How much cress did I sow last year?"
+        )
         self.dataset = read_dataset(config.MOCK_DATA_SMALL)
 
     def test_givenQueryDataWithCrop_thenSelectColumnsContainsCrop(self):
@@ -169,26 +177,40 @@ class TestDatasetFilter(unittest.TestCase):
 
     def test_givenListOfOneDict_thenTransformToDictWithKeysValues(self):
         mock_input = [
-            { "action": "sow", "crop": "cress", "quantity": "1sqft"},
+            {"action": "sow", "crop": "cress", "quantity": "1sqft"},
         ]
         expected = {
-            "action": ["sow", ],
-            "crop": ["cress", ],
-            "quantity": ["1sqft", ],
+            "action": [
+                "sow",
+            ],
+            "crop": [
+                "cress",
+            ],
+            "quantity": [
+                "1sqft",
+            ],
         }
         actual = prepare_for_model._list_of_dicts_to_one_dict(mock_input)
         self.assertEqual(expected, actual)
 
     def test_givenListOfTwoDicts_thenTransformToDictWithListValues(self):
         mock_input = [
-            { "action": "sow", "crop": "cress", "quantity": "1sqft"},
-            { "action": "sow", "crop": "cress", "quantity": "2sqft"},
+            {"action": "sow", "crop": "cress", "quantity": "1sqft"},
+            {"action": "sow", "crop": "cress", "quantity": "2sqft"},
         ]
         expected = {
-            "action": ["sow", "sow", ],
-            "crop": ["cress", "cress", ],
-            "quantity": ["1sqft", "2sqft", ],
+            "action": [
+                "sow",
+                "sow",
+            ],
+            "crop": [
+                "cress",
+                "cress",
+            ],
+            "quantity": [
+                "1sqft",
+                "2sqft",
+            ],
         }
         actual = prepare_for_model._list_of_dicts_to_one_dict(mock_input)
         self.assertEqual(expected, actual)
-

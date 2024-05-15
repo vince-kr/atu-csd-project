@@ -1,6 +1,7 @@
 from pathlib import Path
 from speak_to_data import communication
 
+
 class AppDataLoader:
     def __init__(self, app_data_path: Path) -> None:
         self.app_data_path = app_data_path

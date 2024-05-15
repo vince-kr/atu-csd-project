@@ -2,8 +2,8 @@ from speak_to_data.application.query_parser import QueryData
 
 
 def generate_model_ready_dataset(
-        dataset: list[dict],
-        query_data: QueryData) -> dict[str, list[str]]:
+    dataset: list[dict], query_data: QueryData
+) -> dict[str, list[str]]:
     if not query_data or not query_data.columns:
         return dict()
 
@@ -12,7 +12,8 @@ def generate_model_ready_dataset(
     start_date, end_date = query_data.query_dates.date_range
 
     filter_rows = [
-        row for row in dataset
+        row
+        for row in dataset
         if row["crop"] in crop
         and row["action"] in action
         and start_date <= row["date"] <= end_date
@@ -41,6 +42,7 @@ def _list_of_dicts_to_one_dict(dataset: list[dict[str, str]]) -> dict[str, list[
     value_views = tuple(list(row.values()) for row in dataset)
     # Construct a dict by enumerating the keys and selecting the matching value
     # from each member of value_views
-    one_dict = {key: [value[idx] for value in value_views]
-                for idx, key in enumerate(key_view)}
+    one_dict = {
+        key: [value[idx] for value in value_views] for idx, key in enumerate(key_view)
+    }
     return one_dict

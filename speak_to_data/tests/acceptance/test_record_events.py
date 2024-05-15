@@ -14,6 +14,7 @@ Unique per test:
 - Collection of patterns that should appear in the source
 """
 
+
 @dataclass
 class RouteFormFields:
     route: str
@@ -33,12 +34,12 @@ class Test_REF1_DisplayFormFields(unittest.TestCase):
     def test_correctFormFieldsAppearAtRecordRoutes(self):
         """Confirm that form fields with the expected attributes exist at each route"""
         patterns = {
-            "input_with_date_attr": r'\<input[^\>]*type=\"date\"',
-            "select_with_name_crop": r'\<select[^\>]*name=\"crop\"',
-            "select_with_name_location": r'\<select[^\>]*name=\"location\"',
-            "select_with_name_location_type": r'\<select[^\>]*name=\"location_type\"',
-            "input_with_radio_attr": r'\<input[^\>]*type=\"radio\"',
-            "input_with_text_attr":  r'\<input[^\>]*type=\"text\"',
+            "input_with_date_attr": r"\<input[^\>]*type=\"date\"",
+            "select_with_name_crop": r"\<select[^\>]*name=\"crop\"",
+            "select_with_name_location": r"\<select[^\>]*name=\"location\"",
+            "select_with_name_location_type": r"\<select[^\>]*name=\"location_type\"",
+            "input_with_radio_attr": r"\<input[^\>]*type=\"radio\"",
+            "input_with_text_attr": r"\<input[^\>]*type=\"text\"",
         }
 
         route_form_tests = (
@@ -50,7 +51,7 @@ class Test_REF1_DisplayFormFields(unittest.TestCase):
                     "input_with_text_attr",
                     "select_with_name_location",
                     "select_with_name_location_type",
-                )
+                ),
             ),
             RouteFormFields(
                 route="/plant",
@@ -60,7 +61,7 @@ class Test_REF1_DisplayFormFields(unittest.TestCase):
                     "input_with_text_attr",
                     "select_with_name_location",
                     "select_with_name_location_type",
-                )
+                ),
             ),
             RouteFormFields(
                 route="/maintain",
@@ -69,7 +70,7 @@ class Test_REF1_DisplayFormFields(unittest.TestCase):
                     "input_with_radio_attr",
                     "select_with_name_location",
                     "select_with_name_location_type",
-                )
+                ),
             ),
             RouteFormFields(
                 route="/harvest",
@@ -79,17 +80,19 @@ class Test_REF1_DisplayFormFields(unittest.TestCase):
                     "input_with_text_attr",
                     "select_with_name_location",
                     "select_with_name_location_type",
-                )
+                ),
             ),
         )
 
         for test in route_form_tests:
             with self.subTest(msg=f"Checking form fields at route: {test.route}"):
                 route_html = self.client.get(test.route).text
-                self.assertTrue(all(
-                    re.search(patterns[pattern], route_html)
-                    for pattern in test.patterns
-                ))
+                self.assertTrue(
+                    all(
+                        re.search(patterns[pattern], route_html)
+                        for pattern in test.patterns
+                    )
+                )
 
 
 @dataclass
@@ -97,6 +100,7 @@ class FormInputValidation:
     route: str
     form: Type[ActionForm]
     form_data: dict[str, Union[datetime.date, str]]
+
 
 @dataclass
 class FormWarningTrigger:
@@ -124,7 +128,7 @@ class Test_REF2_ValidateInputs(unittest.TestCase):
                     "crop": "cress",
                     "location": "kitchen",
                     "location_type": "indoor-window-box",
-                }
+                },
             ),
             FormInputValidation(
                 route="/maintain",
@@ -134,7 +138,7 @@ class Test_REF2_ValidateInputs(unittest.TestCase):
                     "duration": "1",
                     "location": "kitchen",
                     "location_type": "indoor-window-box",
-                }
+                },
             ),
             FormInputValidation(
                 route="/harvest",
@@ -145,18 +149,17 @@ class Test_REF2_ValidateInputs(unittest.TestCase):
                     "weight": "40gr",
                     "location": "kitchen",
                     "location_type": "indoor-window-box",
-                }
+                },
             ),
         )
 
         for test in valid_input_tests:
             with self.subTest(msg=f"Testing valid inputs for route: {test.route}"):
-                with self.app.test_request_context(path=test.route,
-                                                   method="POST",
-                                                   data=test.form_data):
+                with self.app.test_request_context(
+                    path=test.route, method="POST", data=test.form_data
+                ):
                     inputs_are_valid = test.form().validate()
                 self.assertTrue(inputs_are_valid)
-
 
     def test_givenInvalidInputsPerForm_thenFormDoesNotValidate(self):
         invalid_input_tests = (
@@ -169,7 +172,7 @@ class Test_REF2_ValidateInputs(unittest.TestCase):
                     "quantity": "42gr",
                     "location": "not a location!",
                     "location_type": "not a location type!",
-                }
+                },
             ),
             FormInputValidation(
                 route="/maintain",
@@ -179,7 +182,7 @@ class Test_REF2_ValidateInputs(unittest.TestCase):
                     "duration": "not a duration!",
                     "location": "not a location!",
                     "location_type": "not a location type!",
-                }
+                },
             ),
             FormInputValidation(
                 route="/harvest",
@@ -190,16 +193,14 @@ class Test_REF2_ValidateInputs(unittest.TestCase):
                     "quantity": "42gr",
                     "location": "not a location!",
                     "location_type": "not a location type!",
-                }
+                },
             ),
         )
 
         for test in invalid_input_tests:
             with self.subTest(msg=f"Testing invalid inputs for route: {test.route}"):
                 with self.app.test_request_context(
-                        path=test.route,
-                        method="POST",
-                        data=test.form_data
+                    path=test.route, method="POST", data=test.form_data
                 ):
                     form = test.form()
                     inputs_are_invalid = not form.validate()
@@ -235,7 +236,7 @@ class Test_REF3_PersistEventRecords(unittest.TestCase):
             "crop": "cress",
             "quantity": "1sqft",
             "location": "kitchen",
-            "location_type": "indoor-window-box"
+            "location_type": "indoor-window-box",
         }
         application.event_recorder(sow_data, self.test_path)
         expected = '"date","action","crop","quantity","duration","location","location_type"\n\
@@ -264,15 +265,14 @@ class Test_REF4_InformUserDataNotSaved(unittest.TestCase):
             "location": "kitchen",
             "location_type": "indoor-window-box",
         }
-        with self.app.test_request_context(path="/sow",
-                                           method="POST",
-                                           data=sow_form_data):
+        with self.app.test_request_context(
+            path="/sow", method="POST", data=sow_form_data
+        ):
             form = presentation.SowForm()
             form.validate()
             expected = "Event date cannot be in the future.\nYour data was not saved!"
             actual = form.errors["date"][0]
             self.assertEqual(expected, actual)
-
 
     def test_givenInvalidCropChoice_thenFormWarnsInvalidSelection(self):
         sow_form_data = {
@@ -282,15 +282,14 @@ class Test_REF4_InformUserDataNotSaved(unittest.TestCase):
             "location": "kitchen",
             "location_type": "indoor-window-box",
         }
-        with self.app.test_request_context(path="/sow",
-                                           method="POST",
-                                           data=sow_form_data):
+        with self.app.test_request_context(
+            path="/sow", method="POST", data=sow_form_data
+        ):
             form = presentation.SowForm()
             form.validate()
             expected = "Not a valid choice.\nYour data was not saved!"
             actual = form.errors["crop"][0]
             self.assertEqual(expected, actual)
-
 
     def test_givenInvalidDuration_thenFormWarnsInvalidSelection(self):
         maintain_form_data = {
@@ -299,9 +298,9 @@ class Test_REF4_InformUserDataNotSaved(unittest.TestCase):
             "location": "kitchen",
             "location_type": "indoor-window-box",
         }
-        with self.app.test_request_context(path="/maintain",
-                                           method="POST",
-                                           data=maintain_form_data):
+        with self.app.test_request_context(
+            path="/maintain", method="POST", data=maintain_form_data
+        ):
             form = presentation.MaintainForm()
             form.validate()
             expected = "Not a valid choice.\nYour data was not saved!"

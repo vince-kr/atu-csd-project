@@ -15,7 +15,7 @@ QueryData = QueryData
 AppDataLoader = app_data_loader.AppDataLoader
 
 
-def initial_setup():
+def initial_setup() -> None:
     erp: Path = config.EVENT_RECORDS_PATH
     if not erp.is_file():
         fieldnames = config.FIELD_NAMES

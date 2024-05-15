@@ -1,3 +1,6 @@
+[tool.mypy]
+ignore_missing_imports = true
+
 [tool.poetry]
 name = "speak_to_data"
 version = "0.2.0"
@@ -5,7 +8,6 @@ description = ""
 authors = ["Vince <vince@krijnsen.com>"]
 license = "MIT"
 readme = "README.md"
-
 
 [tool.poetry.dependencies]
 python = "^3.9"

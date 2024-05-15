@@ -6,7 +6,7 @@ from pathlib import Path
 
 def persist_event(event_data: dict[str, str],
                   persistence_path: Path,
-                  fieldnames: list[str, ...]) -> None:
+                  fieldnames: list[str]) -> None:
     if not persistence_path.is_file():
         raise FileNotFoundError(
             f"Trying to store the record at {persistence_path} "

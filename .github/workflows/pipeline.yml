@@ -14,7 +14,10 @@ jobs:
       security-events: write
       packages: read
     steps:
-    - uses: ./.github/actions/codeql-action
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: run composite CodeQL scan
+      uses: ./.github/actions/codeql-action
 
   # build:
     # name: Build and test

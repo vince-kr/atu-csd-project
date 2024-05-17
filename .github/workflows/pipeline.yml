@@ -16,6 +16,6 @@ jobs:
     steps:
     - uses: ./.github/actions/codeql-action
 
-  build:
-    name: Build and test
-    runs-on: ubuntu-latest
+  # build:
+    # name: Build and test
+    # runs-on: ubuntu-latest

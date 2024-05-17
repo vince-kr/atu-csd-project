@@ -1,0 +1,21 @@
+name: Pull Request pipeline
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  codeql:
+    name: CodeQL scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      security-events: write
+      packages: read
+    steps:
+      uses: ./.github/actions/codeql-action
+
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest

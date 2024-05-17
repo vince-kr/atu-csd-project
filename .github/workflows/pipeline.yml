@@ -14,7 +14,7 @@ jobs:
       security-events: write
       packages: read
     steps:
-      uses: ./.github/actions/codeql-action
+    - uses: ./.github/actions/codeql-action
 
   build:
     name: Build and test

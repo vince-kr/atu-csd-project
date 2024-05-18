@@ -50,8 +50,7 @@ def _sow_or_plant():
     form = presentation.SowForm()
     if form.validate_on_submit():
         form_dict = dict((field.name, str(field.data)) for field in form)
-        iso_date = f"{(d := form_dict['date'])[:4]}-{d[4:6]}-{d[6:8]}"
-        form_dict["date"] = iso_date
+        form_dict["action"] = "sow"
         errors = application.event_recorder(form_dict)
         if not errors:
             return redirect("/")

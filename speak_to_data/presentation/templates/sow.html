@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-
-<title>Sow</title>
-
+{% extends 'base.html' %}
+{% block title %}Sow{% endblock %}
+{% block content %}
 <h1>Sow</h1>
 
 {% from "_formhelpers.html" import render_field %}
@@ -16,3 +15,4 @@
     </dl>
     <p><input type="submit"></p>
 </form>
+{% endblock %}

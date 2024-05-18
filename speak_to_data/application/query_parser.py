@@ -1,36 +1,60 @@
-import dataclasses
 import dateparser
 import datetime
 from spacy.tokens.doc import Doc
 from speak_to_data import application
 
 
-select_columns = set()
+class QueryData:
+    def __init__(self, raw_query: str) -> None:
+        self.columns = set()
+        self.docd_query: Doc = application.nlp(raw_query)
+        self.crops: set[str] = self._retrieve_crops()
+        self.actions: set[str] = self._retrieve_actions()
+        self.locations: set[str] = self._retrieve_locations()
+        self.parsed_date = QueryDatesWarnings(self.docd_query)
+        self.crux: str = self._get_crux()
+
+    def _retrieve_from_query(self, retrieve_from: set[str]) -> set[str]:
+        """Generate the set of lemmas for a query and return matching action/crop"""
+        query_lemmas = set(token.lemma_ for token in self.docd_query)
+        intersection = retrieve_from & query_lemmas
+        if "plant" in intersection:
+            intersection.remove("plant")
+            intersection.add("sow")
+        return intersection
+
+    def _retrieve_crops(self) -> set[str]:
+        """Retrieve all crops from a given query"""
+        if crops := self._retrieve_from_query(application.config.CROPS):
+            self.columns.add("crop")
+        return crops
 
 
-def _retrieve_from_query(query: Doc, retrieve_from: set[str]) -> set[str]:
-    """Generate the set of lemmas for a given query and return matching action/crop"""
-    query_lemmas = set(token.lemma_ for token in query)
-    intersection = retrieve_from & query_lemmas
-    if "plant" in intersection:
-        intersection.remove("plant")
-        intersection.add("sow")
-    return intersection
+    def _retrieve_actions(self) -> set[str]:
+        """Retrieve all actions from a given query"""
+        if actions := self._retrieve_from_query(application.config.ACTIONS):
+            self.columns.add("action")
+        return actions
 
+    def _retrieve_locations(self) -> set[str]:
+        if locations := self._retrieve_from_query(application.config.LOCATIONS):
+            self.columns.add("location")
+        return locations
 
-def retrieve_crop(query: Doc) -> set[str]:
-    """Retrieve all crops from a given query"""
-    if crops := _retrieve_from_query(query, application.config.CROPS):
-        select_columns.add("crop")
-    return crops
-
-
-def retrieve_action(query: Doc) -> set[str]:
-    """Retrieve all actions from a given query"""
-    if actions := _retrieve_from_query(query, application.config.ACTIONS):
-        select_columns.add("action")
-    return actions
-
+    def _get_crux(self) -> str:
+        quantity_indicators: tuple[str, ...] = ("how much", "how many")
+        crux: str = ""
+        if (
+                self.docd_query[:2].text.lower() in quantity_indicators
+                and self.docd_query[2].lemma_ in application.config.CROPS
+        ):
+            self.columns.add("quantity")
+            crux = "what is sum of quantity?"
+        elif ("maintenance" in set(token.lemma_ for token in self.docd_query)
+              or "maintain" in set(token.lemma_ for token in self.docd_query)):
+            self.columns.add("duration")
+            crux = "what is sum of duration?"
+        return crux
 
 class QueryDatesWarnings:
     """Get mentions of dates out of a Doc object for use in filters"""
@@ -114,12 +138,6 @@ class QueryDatesWarnings:
             )
         return date_range
 
-    @staticmethod
-    def _compute_date_range(
-        start: datetime.date, end: datetime.date
-    ) -> tuple[datetime.date, datetime.date]:
-        return start, end
-
     @property
     def warning(self) -> str:
         message = ""
@@ -130,44 +148,6 @@ class QueryDatesWarnings:
             )
         elif not self.date_objects:
             message = (
-                f'Date reference "{self.date_entities[0]}" cannot be parsed '
-                f"as a date, or represents a future date."
+                f'Date reference "{self.date_entities[0]}" cannot be parsed as a date, or represents a future date.'
             )
         return message
-
-
-def get_crux(query: Doc) -> str:
-    quantity_indicators: tuple[str, ...] = ("how much", "how many")
-    crux: str = ""
-    if (
-        query[:2].text.lower() in quantity_indicators
-        and query[2].lemma_ in application.config.CROPS
-    ):
-        select_columns.add("quantity")
-        crux = "what is sum of quantity?"
-    return crux
-
-
-@dataclasses.dataclass
-class QueryData:
-    docd_query: Doc
-    action: set[str]
-    crop: set[str]
-    query_dates: QueryDatesWarnings
-    crux: str
-    columns: set[str]
-
-    def __bool__(self) -> bool:
-        return bool(self.crux and self.query_dates)
-
-
-def parse_query(raw_user_query: str) -> QueryData:
-    docd_query: Doc = application.nlp(raw_user_query)
-    return QueryData(
-        docd_query=docd_query,
-        action=retrieve_action(docd_query),
-        crop=retrieve_crop(docd_query),
-        query_dates=QueryDatesWarnings(docd_query),
-        crux=get_crux(docd_query),
-        columns=select_columns,
-    )

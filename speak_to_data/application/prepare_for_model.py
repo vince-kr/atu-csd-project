@@ -7,24 +7,28 @@ def generate_model_ready_dataset(
     if not query_data or not query_data.columns:
         return dict()
 
-    crop: set[str] = query_data.crop
-    action: set[str] = query_data.action
-    start_date, end_date = query_data.query_dates.date_range
+    crops: set[str] = query_data.crops
+    actions: set[str] = query_data.actions
+    locations: set[str] = query_data.locations
+    start_date, end_date = query_data.parsed_date.date_range
 
-    filter_rows = [
-        row
-        for row in dataset
-        if row["crop"] in crop
-        and row["action"] in action
-        and start_date <= row["date"] <= end_date
-    ]
+    filtered = dataset
 
-    if not filter_rows:
+    if crops:
+        filtered = [row for row in filtered if row["crop"] in crops]
+    if actions:
+        filtered = [row for row in filtered if row["action"] in actions]
+    if locations:
+        filtered = [row for row in filtered if row["location"] in locations]
+    if start_date and end_date:
+        filtered = [row for row in filtered if start_date <= row["date"] <= end_date]
+
+    if not filtered:
         return dict()
 
     filter_columns = [
         {key: row[key] for key in row.keys() if key in query_data.columns}
-        for row in filter_rows
+        for row in filtered
     ]
 
     transform = _list_of_dicts_to_one_dict(filter_columns)

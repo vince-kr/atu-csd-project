@@ -1,2 +1,2 @@
-"date","action","crop","quantity","location","location_type"
-"2023-04-28","sow","cress","1sqft","kitchen","indoor-window-box"
+"date","action","crop","quantity","duration","location","location_type"
+"2023-04-28","sow","cress","1sqft","","kitchen","indoor-window-box"

@@ -14,7 +14,7 @@ def persist_event(
         )
     try:
         with open(persistence_path, "a", newline="") as events_store:
-            w = csv.DictWriter(events_store, fieldnames=fieldnames, dialect="unix")
+            w = csv.DictWriter(events_store, fieldnames=fieldnames, dialect="unix", extrasaction="ignore")
             w.writerow(event_data)
     except PermissionError as pe:
         raise PermissionError(f"Not allowed to write to file {pe.filename}")

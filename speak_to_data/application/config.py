@@ -47,5 +47,6 @@ ACTION_NAMES = {
 
 ACTIONS = set(communication.read_json(APP_DATA_PATH)["actions"])
 CROPS = set(communication.read_json(APP_DATA_PATH)["crops"])
+LOCATIONS = set(communication.read_json(APP_DATA_PATH)["locations"])
 
 NOT_SAVED_WARNING = "Your data was not saved!"

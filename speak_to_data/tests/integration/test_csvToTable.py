@@ -1,4 +1,3 @@
-import json
 from speak_to_data import application
 from speak_to_data.application import config, prepare_for_model, query_parser
 from speak_to_data.communication import read_dataset
@@ -7,7 +6,7 @@ import unittest
 
 class TestCsvReaderToTableGenerator(unittest.TestCase):
     def setUp(self):
-        self.query_data = query_parser.parse_query(
+        self.query_data = query_parser.QueryData(
             "How much cress did I sow last year?"
         )
 

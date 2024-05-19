@@ -12,7 +12,7 @@ app.config["SECRET_KEY"] = "hush"
 def index():
     form = presentation.QueryForm()
     if form.validate_on_submit():
-        valid_query_data = application.parse_query(form.user_query.data)
+        valid_query_data = application.QueryData(form.user_query.data)
         if valid_query_data:
             request_object = application.generate_request_object(
                 valid_query_data, application.config.EVENT_RECORDS_PATH
@@ -26,7 +26,7 @@ def index():
             response = str(response_to_user)
         else:
             # Let the user know to change their query
-            response = valid_query_data.query_dates.warning
+            response = valid_query_data.parsed_date.warning
     else:
         response = ""
     show_user = {

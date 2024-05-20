@@ -30,7 +30,7 @@ def index():
     else:
         response = ""
     show_user = {
-        "previous_query": form.user_query.data,
+        "previous_query": form.user_query.data or "No query",
         "response": response,
     }
     return render_template("index.html", form=form, show_user=show_user)

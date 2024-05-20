@@ -1,5 +1,6 @@
 import datetime
 import re
+import requests
 from speak_to_data import application, communication, presentation
 import unittest
 
@@ -96,9 +97,7 @@ class Test_INLF4_RetrieveCruxFromQuery(unittest.TestCase):
 class Test_INLF5_GenerateAndSendRequestObject(unittest.TestCase):
     def setUp(self):
         self.query_data = query_parser.QueryData("How much cress did I sow last year?")
-
-    def test_givenTestQueryData_thenRequestObjectHasExpectedValue(self):
-        expected = {
+        self.valid_request_object = {
             "inputs": {
                 "query": "what is sum of quantity?",
                 "table": {
@@ -111,7 +110,17 @@ class Test_INLF5_GenerateAndSendRequestObject(unittest.TestCase):
                 "wait_for_model": "true",
             },
         }
+
+    def test_givenTestQueryData_thenRequestObjectHasExpectedValue(self):
+        expected = self.valid_request_object
         actual = application.generate_request_object(
             self.query_data, application.config.MOCK_DATA_SMALL
         )
         self.assertEqual(expected, actual)
+
+    def test_givenValidRequestObject_thenTapasModelResponds(self):
+        url = "https://api-inference.huggingface.co/models/google/tapas-large-finetuned-wtq"
+        api_token = application.config.SECRETS["huggingface_api_token"]
+        headers = {"Authorization": f"Bearer {api_token}"}
+        response = requests.post(url, headers=headers, json=self.valid_request_object)
+        self.assertTrue(response.status_code)

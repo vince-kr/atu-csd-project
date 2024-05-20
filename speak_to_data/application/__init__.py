@@ -7,15 +7,14 @@ from speak_to_data.application import (
     events,
     prepare_for_model,
     query_parser,
-response_parser,
+    response_parser,
     app_data_loader,
 )
-from speak_to_data.application.query_parser import QueryData
 from speak_to_data import communication
 
 nlp = spacy.load("en_core_web_sm")
 event_recorder = events.event_recorder
-QueryData = QueryData
+QueryData = query_parser.QueryData
 AppDataLoader = app_data_loader.AppDataLoader
 Response = response_parser.Response
 

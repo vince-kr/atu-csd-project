@@ -1,6 +1,5 @@
 import datetime
 import re
-import requests
 from speak_to_data import application, communication, presentation
 import unittest
 
@@ -117,13 +116,6 @@ class Test_INLF5_GenerateAndSendRequestObject(unittest.TestCase):
             self.query_data, application.config.MOCK_DATA_SMALL
         )
         self.assertEqual(expected, actual)
-
-    def test_givenValidRequestObject_thenTapasModelResponds(self):
-        url = "https://api-inference.huggingface.co/models/google/tapas-large-finetuned-wtq"
-        api_token = application.config.SECRETS["huggingface_api_token"]
-        headers = {"Authorization": f"Bearer {api_token}"}
-        response = requests.post(url, headers=headers, json=self.valid_request_object)
-        self.assertTrue(response.status_code)
 
 
 class Test_INLF6_PresentModelResponseToUser(unittest.TestCase):

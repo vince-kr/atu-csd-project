@@ -3,7 +3,6 @@ from pathlib import Path
 
 SECRETS_PATH = Path(__file__).parent.parent / "secret.json"
 SECRETS = communication.read_json(SECRETS_PATH)
-assert SECRETS
 APP_DATA_PATH = Path(__file__).parent.parent / "app_data.json"
 EVENT_RECORDS_PATH = Path(__file__).parent.parent.parent / "data" / "events.csv"
 MOCK_DATA_ONELINE = (

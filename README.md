@@ -2,7 +2,7 @@
 
 *your personal homesteading assistant*
 
-![GHA workflow](https://github.com/github/docs/actions/workflows/pipeline.yml/badge.svg)
+![GHA workflow](https://github.com/vince-kr/atu-csd-project/actions/workflows/pipeline.yml/badge.svg)
 
 ## Minimum viable product
 

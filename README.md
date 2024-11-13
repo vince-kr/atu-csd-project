@@ -2,6 +2,8 @@
 
 *your personal homesteading assistant*
 
+![GHA workflow](https://github.com/github/docs/actions/workflows/pipeline.yml/badge.svg)
+
 ## Minimum viable product
 
 This project verifies that the basic principles of the application are viable.

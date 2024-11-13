@@ -1,4 +1,4 @@
-name: Pull Request pipeline
+name: Test and scan
 
 on: pull_request
 

@@ -1,6 +1,3 @@
-[tool.mypy]
-ignore_missing_imports = true
-
 [tool.poetry]
 name = "speak_to_data"
 version = "0.2.0"
@@ -21,6 +18,9 @@ spacy = "^3.7.4"
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.10.0"
 black = "^24.4.2"
+
+[tool.mypy]
+ignore_missing_imports = true
 
 [build-system]
 requires = ["poetry-core"]

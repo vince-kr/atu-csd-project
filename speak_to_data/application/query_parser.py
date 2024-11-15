@@ -6,7 +6,7 @@ from speak_to_data import application
 
 class QueryData:
     def __init__(self, raw_query: str) -> None:
-        self.columns = set()
+        self.columns: set = set()
         self.docd_query: Doc = application.nlp(raw_query)
         self.crops: set[str] = self._retrieve_crops()
         self.actions: set[str] = self._retrieve_actions()
